@@ -1,14 +1,12 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-import pickle
+import joblib  # ✅ use joblib instead of pickle
 
 app = FastAPI()
 
 # Load vectorizer and model
-with open("Tfidf_vectorizer.pkl", "rb") as f:
-    vectorizer = pickle.load(f)
-with open("genre_model.pkl", "rb") as f:
-    model = pickle.load(f)
+vectorizer = joblib.load("Tfidf_vectorizer.pkl")
+model = joblib.load("genre_model.pkl")
 
 class InputText(BaseModel):
     description: str
