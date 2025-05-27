@@ -22,3 +22,6 @@ def predict_genre(data: MovieInput):
     print(f"Input: {text[0]}")
     print(f"Prediction: {prediction}")
     return {"genre": prediction}
+
+if __name__ == "__main__":
+    app.run(debug=True)
