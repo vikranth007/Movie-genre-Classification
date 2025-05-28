@@ -1,22 +1,27 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-import joblib  # ✅ use joblib instead of pickle
+import joblib
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-# Load vectorizer and model
+# Enable CORS to allow HTML page to access this API
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Use specific origin in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 vectorizer = joblib.load("Tfidf_vectorizer.pkl")
 model = joblib.load("genre_model.pkl")
 
 class InputText(BaseModel):
     description: str
 
-@app.get("/")
-def read_root():
-    return {"message": "Movie Genre Classifier is running."}
-
 @app.post("/predict")
-def predict_genre(input: InputText):
-    text_vector = vectorizer.transform([input.description])
-    prediction = model.predict(text_vector)
-    return {"genre": prediction[0]}
+def predict(input: InputText):
+    vec = vectorizer.transform([input.description])
+    pred = model.predict(vec)[0]
+    return {"genre": pred}

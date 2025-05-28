@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Movie Genre Predictor</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 40px;
+    }
+    h2 {
+      color: #333;
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+      font-size: 16px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #008CBA;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #005f73;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🎬 Movie Genre Classifier</h2>
+  <p>Enter a movie plot description:</p>
+  <textarea id="description" placeholder="Example: A young man discovers he has magical powers..."></textarea><br/>
+  <button onclick="predictGenre()">Predict Genre</button>
+  <div id="result"></div>
+
+  <script>
+    async function predictGenre() {
+      const description = document.getElementById("description").value;
+
+      const response = await fetch("http://127.0.0.1:8000/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ description: description })
+      });
+
+      const result = await response.json();
+      document.getElementById("result").innerText = `Predicted Genre: ${result.genre}`;
+    }
+  </script>
+
+</body>
+</html>
